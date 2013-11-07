@@ -1,0 +1,21 @@
+#mviconnect button, .mviconnect button { 
+
+    background:none; 
+    border:none; 
+    cursor:pointer; 
+    
+} 
+
+#mviconnect button, .mviconnect button { 
+    width:auto; 
+    overflow:visible; 
+
+}
+ 
+#mviconnect button img, .mviconnect button img { 
+    margin:0; 
+}
+
+#mviconnect, #mviconnect p, .mviconnect, .mviconnect p {
+  margin-bottom:10px;
+}
