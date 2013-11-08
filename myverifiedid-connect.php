@@ -242,7 +242,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
             if($mviConfiguration['mvi_client_id'] && $mviConfiguration['mvi_client_secret'] && $mviConfiguration['mvi_redirect_uri']){
                 add_query_arg( 'mvi_connect_login', $authUrl );
 
-                echo "<div id='mvi-login' class='mvi-login' style='padding:5px 0;'><a class='login' href='javascript:void(0)' onclick='callWindow();'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%;'></a></div>";
+                echo "<div id='mvi-login' class='mvi-login' style='padding:5px 0;'><a class='login' href='javascript:void(0)' onclick='callWindow();'><img src='".plugins_url('images/signIn-style-'.$mviConfiguration['mvi_load_style'].'.jpg',__FILE__)."' style='max-width:100%;'></a></div>";
                 ?>
           
                 <script type="text/javascript">
@@ -287,7 +287,9 @@ function MyVerifiedID_logout(){
 add_action('bp_after_sidebar_login_form', 'MyVerifiedID_login_form'); 
 function MyVerifiedID_login_form(){
 
-  echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL . '/wp-myverifiedid-connect/css/style.css" type="text/css" media="all" />';    
+  echo "<link rel='stylesheet' href='".plugins_url('css/style.css',__FILE__)."'  type='text/css' media='all' />";    
+  
+  // echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL . '/wp-myverifiedid-connect/css/style.css" type="text/css" media="all" />';    
     MyVerifiedID_connect_button(true);
 
 }
@@ -296,8 +298,8 @@ function MyVerifiedID_login_form(){
 //add button to registration form
 add_action('register_form','MyVerifiedID_register_form'); 
 function MyVerifiedID_register_form(){
+  echo "<link rel='stylesheet' href='".plugins_url('css/style.css',__FILE__)."'  type='text/css' media='all' />";    
 
-  echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL . '/wp-myverifiedid-connect/css/style.css" type="text/css" media="all" />';    
     MyVerifiedID_connect_button(true);
 
 }
