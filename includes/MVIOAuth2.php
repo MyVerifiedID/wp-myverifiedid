@@ -78,13 +78,13 @@ class MVIOAuth2{
 
   public function AuthenticateClient() {
     global $mviConfiguration;  
-    if (isset($_GET['code'])) {
+    if (isset($_GET['code_lg'])) {
 
 
       // We got here from the redirect from a successful authorization grant, fetch the access token
       
       $postParams = array(
-          'code' => $_GET['code'],
+          'code' => $_GET['code_lg'],
           'grant_type' => 'authorization_code',
           'redirect_uri' => $this->redirectUri,
           'client_id' => $this->clientId,

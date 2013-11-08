@@ -78,7 +78,19 @@ function MyVerifiedID_connect_button($loggedIn=false){
       } 
     }
 
-    if (isset($_REQUEST['code']) || $loggedIn==true) {
+    if($_REQUEST['code']!=""){
+        
+    ?>
+      <script type="text/javascript">
+        window.opener.receiveDataFromPopup("<?php echo $_REQUEST['code'] ?>","<?php echo $_REQUEST['state'] ?>");
+        window.close();
+      </script>
+    <?php
+       
+
+    }
+
+    if (isset($_REQUEST['code_lg']) || $loggedIn==true) {
       $MVIClient = new MVIClient();
       $MVIClient->setClientId($mviConfiguration['mvi_client_id']);
       $MVIClient->setClientSecret($mviConfiguration['mvi_client_secret']);
@@ -86,13 +98,14 @@ function MyVerifiedID_connect_button($loggedIn=false){
       $MVIAuthClass = new MVIAuthClass($MVIClient);
 
       //kill session if new login
-      if (isset($_REQUEST['code'])) {
+      if (isset($_REQUEST['code_lg'])) {
             if (strval($_SESSION['state']) !== strval($_REQUEST['state'])) {
               die("The session state ({$_SESSION['state']}) didn't match the state parameter ({$_REQUEST['state']})");
               exit();
             }
             
             try {
+
                 $MVIClient->AuthenticateClient();
                 $_SESSION['access_token'] = $MVIClient->getAccessToken();
             } catch (Exception $e) {
@@ -114,7 +127,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
            
        
         //Check if user exists and/or create
-        if (isset($_REQUEST['code'])) {
+        if (isset($_REQUEST['code_lg'])) {
       // $MVIUser = $MVIAuthClass->User->user($token_obj->access_token);
       // exit;
           try {
@@ -211,7 +224,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
             exit();
           }
         }
-        if (isset($_REQUEST['code'])) {
+        if (isset($_REQUEST['code_lg'])) {
           $_SESSION['access_token'] = $MVIClient->getAccessToken();
         }
       }
@@ -229,7 +242,27 @@ function MyVerifiedID_connect_button($loggedIn=false){
             if($mviConfiguration['mvi_client_id'] && $mviConfiguration['mvi_client_secret'] && $mviConfiguration['mvi_redirect_uri']){
                 add_query_arg( 'mvi_connect_login', $authUrl );
 
-                echo "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$authUrl."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%;'></a></div>";
+                echo "<div id='mvi-login' class='mvi-login' style='padding:5px 0;'><a class='login' href='javascript:void(0)' onclick='callWindow();'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%;'></a></div>";
+                ?>
+          
+                <script type="text/javascript">
+
+
+                  window.receiveDataFromPopup = function(code,state) {
+                   window.location.href = "/wp-login?code_lg="+code+'&state='+state;
+                  };
+
+                  function callWindow(){
+                    var top = (screen.height - 500) / 4; 
+                    var rect = document.getElementById('mvi-login').getBoundingClientRect();
+                    var left = (rect.left - 428) ;
+                    // console.log(rect.top, rect.right, rect.bottom, rect.left);
+                     var callWin = window.open("<?php echo $authUrl ?>","_blank","name=sdsd, height=500,width=428,status=yes,toolbar=no,menubar=no,location=no,left="+left+",top="+top);
+                  }
+                </script>
+                <?php
+
+
             }
         }
       }
