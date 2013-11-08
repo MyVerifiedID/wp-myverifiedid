@@ -78,7 +78,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
       } 
     }
 
-    if($_REQUEST['code']!=""){
+    if($_REQUEST['code']!="" || $_REQUEST['error']!=""){
         
     ?>
       <script type="text/javascript">
