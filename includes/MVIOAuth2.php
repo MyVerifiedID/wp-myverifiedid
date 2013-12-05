@@ -1,6 +1,5 @@
 <?php
-// ini_set('display_errors', 1);
-// error_reporting(E_ALL);
+
 class MVIOAuth2{
   public $clientId;
   public $clientSecret;
@@ -78,13 +77,13 @@ class MVIOAuth2{
 
   public function AuthenticateClient() {
     global $mviConfiguration;  
-    if (isset($_GET['code_lg'])) {
+    if (isset($_GET['code'])) {
 
 
       // We got here from the redirect from a successful authorization grant, fetch the access token
       
       $postParams = array(
-          'code' => $_GET['code_lg'],
+          'code' => $_GET['code'],
           'grant_type' => 'authorization_code',
           'redirect_uri' => $this->redirectUri,
           'client_id' => $this->clientId,

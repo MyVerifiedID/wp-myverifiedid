@@ -148,11 +148,10 @@ function MyVerifiedID_Options_Page() {
 		<tr>
 		<th scope="row"><?php _e('Choose button stylesheet:', 'myverifiedid-connect'); ?></th>
 		<td>
-      <?php if(!isset($myverifiedid_connect['mvi_load_style'])) $myverifiedid_connect['mvi_load_style'] = "a"; ?>
-		<input name="mvi_load_style" id="mvi_load_style_yes" value="a" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style']){?> checked <?php } ?>> 
-    <img src='<?php echo plugins_url('images/signIn-style-a.jpg',__FILE__) ?>' />  &nbsp;&nbsp;&nbsp;&nbsp;
+      <?php if(!isset($myverifiedid_connect['mvi_load_style'])) $myverifiedid_connect['mvi_load_style'] = 'a'; ?>
+		<input name="mvi_load_style" id="mvi_load_style_yes" value="a" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style']){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signIn-style-a.jpg"/>  &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <input name="mvi_load_style" id="mvi_load_style_no" value="b" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style'] == 'b'){?> checked <?php } ?>> <img src='<?php echo plugins_url('images/signIn-style-b.jpg',__FILE__) ?>'  />		
+    <input name="mvi_load_style" id="mvi_load_style_no" value="b" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style'] == 'b'){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signIn-style-b.jpg"/>		
 		</td>
 		</tr>
 

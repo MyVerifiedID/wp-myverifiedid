@@ -7,7 +7,7 @@ Plugin Name: My Verified ID Connect
 Plugin URI: http://myverifiedid.com
 Description: This plugins helps you create My Verified ID login and register buttons. The login and register process only takes one click.
 Version: Beta 1.0
-Author: Kamlesh Likhare
+Author: MyVerifiedID
 License: GPL
 */
 require_once "includes/config.php";
@@ -78,19 +78,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
       } 
     }
 
-    if($_REQUEST['code']!="" || $_REQUEST['error']!=""){
-        
-    ?>
-      <script type="text/javascript">
-        window.opener.receiveDataFromPopup("<?php echo $_REQUEST['code'] ?>","<?php echo $_REQUEST['state'] ?>");
-        window.close();
-      </script>
-    <?php
-       
-
-    }
-
-    if (isset($_REQUEST['code_lg']) || $loggedIn==true) {
+    if (isset($_REQUEST['code']) || $loggedIn==true) {
       $MVIClient = new MVIClient();
       $MVIClient->setClientId($mviConfiguration['mvi_client_id']);
       $MVIClient->setClientSecret($mviConfiguration['mvi_client_secret']);
@@ -98,18 +86,16 @@ function MyVerifiedID_connect_button($loggedIn=false){
       $MVIAuthClass = new MVIAuthClass($MVIClient);
 
       //kill session if new login
-      if (isset($_REQUEST['code_lg'])) {
+      if (isset($_REQUEST['code'])) {
             if (strval($_SESSION['state']) !== strval($_REQUEST['state'])) {
               die("The session state ({$_SESSION['state']}) didn't match the state parameter ({$_REQUEST['state']})");
               exit();
             }
-            
-            try {
 
+            try {
                 $MVIClient->AuthenticateClient();
                 $_SESSION['access_token'] = $MVIClient->getAccessToken();
             } catch (Exception $e) {
-
                   unset($_SESSION['access_token']);
                   print "<p style=\"color:red\">Please enter valid API Credentials<p>\n";
                   echo '<meta http-equiv="refresh" content="3; url='.site_url().'">';
@@ -127,9 +113,9 @@ function MyVerifiedID_connect_button($loggedIn=false){
            
        
         //Check if user exists and/or create
-        if (isset($_REQUEST['code_lg'])) {
-      // $MVIUser = $MVIAuthClass->User->user($token_obj->access_token);
-      // exit;
+        if (isset($_REQUEST['code'])) {
+     $MVIUser = $MVIAuthClass->User->user($token_obj->access_token);
+
           try {
             $MVIUser = $MVIAuthClass->User->user($token_obj->access_token);
 
@@ -148,6 +134,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
 
           $_mvi_displayName=$MVIUser['first_name']."-".$MVIUser['uid'];
           $_mvi_photo=$MVIUser['profile_picture'];
+          $_mvi_seal=$MVIUser['profile_seal_code'];
 
       
 
@@ -156,7 +143,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
             if($UID!=0){
                 $UID=$UID;
                 if(!get_user_meta($UID, 'mvi_connect_user_id')){
-                    update_user_meta($UID, 'mvi_connect_user_id', $_mvi_id);
+                   
                 }
             }else{//not logged into wp
 
@@ -178,7 +165,8 @@ function MyVerifiedID_connect_button($loggedIn=false){
                     $user_name=$arr_user_name[1];
                     $user_name=sanitize_user( $user_name );
                     $user_name=str_replace(array(" ","."),"",$user_name);
-                    $user = username_exists( $user_name );
+                    $user = username_exists( $user_name ); 
+                   
                 }
                 if ( $user ) { //try first & last name
                     $user_name=$_mvi_displayName;
@@ -203,6 +191,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
                       }else{
                           update_user_meta($UID, 'nickname', $_mvi_displayName);
                           update_user_meta($UID, 'display_name', $_mvi_displayName);
+                         
                           //budypress functions
                           if(function_exists('wds_bp_check')){
                               mvi_connect_bp_user($UID,$_mvi_displayName,$_mvi_photo);//buddypress.php
@@ -220,11 +209,12 @@ function MyVerifiedID_connect_button($loggedIn=false){
             }
             update_user_meta($UID, 'mvi_connect_token', $_SESSION['access_token']);
             update_user_meta($UID, 'mvi_profile_picture', $_mvi_photo);
+            update_user_meta($UID, 'mvi_seal', $_mvi_seal);
             wp_redirect( site_url() );
             exit();
           }
         }
-        if (isset($_REQUEST['code_lg'])) {
+        if (isset($_REQUEST['code'])) {
           $_SESSION['access_token'] = $MVIClient->getAccessToken();
         }
       }
@@ -242,27 +232,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
             if($mviConfiguration['mvi_client_id'] && $mviConfiguration['mvi_client_secret'] && $mviConfiguration['mvi_redirect_uri']){
                 add_query_arg( 'mvi_connect_login', $authUrl );
 
-                echo "<div id='mvi-login' class='mvi-login' style='padding:5px 0;'><a class='login' href='javascript:void(0)' onclick='callWindow();'><img src='".plugins_url('images/signIn-style-'.$mviConfiguration['mvi_load_style'].'.jpg',__FILE__)."' style='max-width:100%;'></a></div>";
-                ?>
-          
-                <script type="text/javascript">
-
-
-                  window.receiveDataFromPopup = function(code,state) {
-                   window.location.href = "/wp-login?code_lg="+code+'&state='+state;
-                  };
-
-                  function callWindow(){
-                    var top = (screen.height - 500) / 4; 
-                    var rect = document.getElementById('mvi-login').getBoundingClientRect();
-                    var left = (rect.left - 428) ;
-                    // console.log(rect.top, rect.right, rect.bottom, rect.left);
-                     var callWin = window.open("<?php echo $authUrl ?>","_blank","name=sdsd, height=500,width=428,status=yes,toolbar=no,menubar=no,location=no,left="+left+",top="+top);
-                  }
-                </script>
-                <?php
-
-
+                echo "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$authUrl."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%'></a></div>";
             }
         }
       }
@@ -280,27 +250,15 @@ function MyVerifiedID_logout(){
 * Function : 
 * Modified Date :
 * @params : None
-* Use : loads when login form exists at buddypress
+* Use : loads when login form exists
 */
 
 //add button to login form
 add_action('bp_after_sidebar_login_form', 'MyVerifiedID_login_form'); 
 function MyVerifiedID_login_form(){
 
-  echo "<link rel='stylesheet' href='".plugins_url('css/style.css',__FILE__)."'  type='text/css' media='all' />";    
-  
-  // echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL . '/wp-myverifiedid-connect/css/style.css" type="text/css" media="all" />';    
-    MyVerifiedID_connect_button(true);
-
-}
-
-
-//add button to registration form
-add_action('register_form','MyVerifiedID_register_form'); 
-function MyVerifiedID_register_form(){
-  echo "<link rel='stylesheet' href='".plugins_url('css/style.css',__FILE__)."'  type='text/css' media='all' />";    
-
-    MyVerifiedID_connect_button(true);
+  echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL . '/wp-myverifiedid-connect/css/style.css" type="text/css" media="all" />';    
+    MyVerifiedID_connect_button();
 
 }
 
@@ -360,7 +318,14 @@ function my_plugin_load_first()
   }
 }
 add_action("activated_plugin", "my_plugin_load_first");
+//add button to registration form
+add_action('register_form','MyVerifiedID_register_form'); 
+function MyVerifiedID_register_form(){
+  echo "<link rel='stylesheet' href='".plugins_url('css/style.css',__FILE__)."'  type='text/css' media='all' />";    
 
+    MyVerifiedID_connect_button(true);
+
+}
 /*
 Options Page
 */
@@ -373,5 +338,8 @@ if (class_exists('MyverifiedIDFBSettings')) {
     ) , 1);
   }
 }
+
+
+
 
 ?>
