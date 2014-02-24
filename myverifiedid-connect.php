@@ -132,7 +132,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
           $_mvi_email=$MVIUser['email'];
           
 
-          $_mvi_displayName=$MVIUser['first_name']."-".$MVIUser['uid'];
+          $_mvi_displayName=$MVIUser['display_name'];
           $_mvi_photo=$MVIUser['profile_picture'];
           $_mvi_seal=$MVIUser['profile_seal_code'];
 
@@ -210,6 +210,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
             update_user_meta($UID, 'mvi_connect_token', $_SESSION['access_token']);
             update_user_meta($UID, 'mvi_profile_picture', $_mvi_photo);
             update_user_meta($UID, 'mvi_seal', $_mvi_seal);
+            update_user_meta($UID, 'nickname', $_mvi_displayName);
             wp_redirect( site_url() );
             exit();
           }
