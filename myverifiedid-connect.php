@@ -92,6 +92,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
               exit();
             }
 
+
             try {
                 $MVIClient->AuthenticateClient();
                 $_SESSION['access_token'] = $MVIClient->getAccessToken();
@@ -115,6 +116,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
         //Check if user exists and/or create
         if (isset($_REQUEST['code'])) {
      $MVIUser = $MVIAuthClass->User->user($token_obj->access_token);
+
 
           try {
             $MVIUser = $MVIAuthClass->User->user($token_obj->access_token);
@@ -184,13 +186,15 @@ function MyVerifiedID_connect_button($loggedIn=false){
                 if ( !$user ) { //if no user create them
                       $random_password = wp_generate_password( 12, false );
                       $UID = wp_create_user( $user_name, $random_password, $_mvi_email );
+                      wp_update_user( array ( 'ID' => $UID, 'user_nicename' =>  $MVIUser['first_name']." ".$MVIUser['last_name'] ) ) ;
+
                       if(!is_int($UID)){
                           $user=get_user_by_email($_mvi_email);
                           $UID=$user->ID;
                           //echo "mvi_email: ".$_mvi_email."<br>";
                       }else{
                           update_user_meta($UID, 'nickname', $_mvi_displayName);
-                          update_user_meta($UID, 'display_name', $_mvi_displayName);
+                          update_user_meta($UID, 'display_name', $MVIUser['first_name']." ".$MVIUser['last_name']);
                          
                           //budypress functions
                           if(function_exists('wds_bp_check')){
@@ -207,10 +211,17 @@ function MyVerifiedID_connect_button($loggedIn=false){
               //login user and redirect
               wp_set_auth_cookie( $UID, false, is_ssl() );
             }
+           
             update_user_meta($UID, 'mvi_connect_token', $_SESSION['access_token']);
             update_user_meta($UID, 'mvi_profile_picture', $_mvi_photo);
             update_user_meta($UID, 'mvi_seal', $_mvi_seal);
-            update_user_meta($UID, 'nickname', $_mvi_displayName);
+            update_user_meta($UID, 'nickname',  $MVIUser['first_name']." ".$MVIUser['last_name']);
+            update_user_meta($UID, 'display_name',  $MVIUser['first_name']." ".$MVIUser['last_name']);
+            update_user_meta($UID, 'profile_url',  $MVIUser['profile_url']);
+
+          
+           
+            wp_update_user( array ( 'ID' => $UID, 'user_nicename' => $MVIUser['first_name']." ".$MVIUser['last_name'],'display_name'=> $MVIUser['first_name']." ".$MVIUser['last_name']) ) ;
             wp_redirect( site_url() );
             exit();
           }
@@ -241,6 +252,37 @@ function MyVerifiedID_connect_button($loggedIn=false){
   }
 }
 
+
+  function cp_login_head() {
+    
+    
+    
+
+    if (is_user_logged_in()) :
+      global $current_user;
+      $current_user = wp_get_current_user();
+       $mvi_connect_token = get_user_meta($current_user->id, "mvi_connect_token", true ); 
+      if(!empty($mvi_connect_token)){
+        $access_token = json_decode($mvi_connect_token);
+        if($access_token->access_token){
+          
+          $_mvi_profile_picture = file_get_contents('http://api.myverifiedid.com/api/users/profile_picture?access_token='.$access_token->access_token);   
+        
+          update_user_meta($current_user->id, 'mvi_profile_picture', $_mvi_profile_picture);
+        
+        }
+      }
+      
+      
+      $display_user_name = $current_user->display_name;
+      $logout_url = cp_logout_url();
+      ?>
+      <?php _e( 'Welcome,', APP_TD ); ?> <strong><?php echo $display_user_name; ?></strong> [ <a href="<?php echo CP_DASHBOARD_URL; ?>"><?php _e( 'My Dashboard', APP_TD ); ?></a> | <a href="<?php echo $logout_url; ?>"><?php _e( 'Log out', APP_TD ); ?></a> ]&nbsp;
+    <?php else : ?>
+      <?php _e( 'Welcome,', APP_TD ); ?> <strong><?php _e( 'visitor!', APP_TD ); ?></strong> [ <a href="<?php echo appthemes_get_registration_url(); ?>"><?php _e( 'Register', APP_TD ); ?></a> | <a href="<?php echo wp_login_url(); ?>"><?php _e( 'Login', APP_TD ); ?></a> ]&nbsp;
+    <?php endif;
+
+  }
 
 add_action('wp_logout','MyVerifiedID_logout');
 function MyVerifiedID_logout(){
@@ -278,7 +320,19 @@ function MyVerifiedID_insert_avatar($avatar = '', $id_or_email, $size = 96, $def
     $id = $id_or_email->user_id;
   }
   if ($id == 0) return $avatar;
-  $pic = get_user_meta($id, 'mvi_profile_picture', true);
+
+   $mvi_connect_token = get_user_meta($id, "mvi_connect_token", true ); 
+
+    if(!empty($mvi_connect_token)){
+      $access_token = json_decode($mvi_connect_token);
+    if($access_token->access_token){
+      
+      $_mvi_profile_picture = @file_get_contents('http://api.myverifiedid.com/api/users/profile_picture?access_token='.$access_token->access_token);   
+    
+    }  
+  }
+
+  $pic = $_mvi_profile_picture;
   if (!$pic || $pic == '') return $avatar;
   $avatar = preg_replace('/src=("|\').*?("|\')/i', 'src=\'' . $pic . '\'', $avatar);
   return $avatar;

@@ -217,9 +217,9 @@
       $responseBody = $auths->getrespBody();
       if (($responseBody = json_decode($responseBody, true)) != null && isset($responseBody['error']['message']) && isset($responseBody['error']['code'])) {
         // if we're getting a json encoded error definition, use that instead of the raw response body for improved readability
-        $errorMessage = "Error calling " . $auths->getUrl() . ": ({$responseBody['error']['code']}) {$responseBody['error']['message']}";
+        $errorMessage = "Error calling : ({$responseBody['error']['code']}) {$responseBody['error']['message']}";
       } else {
-        $errorMessage = "Error calling " . $auths->getMethod() . " " . $auths->getUrl() . ": (" . $auths->getrespHttpCode() . ") " . $auths->getrespBody();
+        $errorMessage = "Error calling api";
       }
       throw new apiServiceException($errorMessage);
     }
