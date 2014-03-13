@@ -31,8 +31,9 @@ add_action('login_form', 'MyVerifiedID_SignInButton');
 add_shortcode('mvi-signin-button',"MyVerifiedID_signin_shortcode");
 
 function MyVerifiedID_signin_shortcode(){
+  extract( shortcode_atts( array(), $atts ));
 
-   MyVerifiedID_connect_button(true);
+   return MyVerifiedID_connect_button(true);
 }
 
 
@@ -40,7 +41,10 @@ add_shortcode('mvi-signup-button',"MyVerifiedID_signup_shortcode");
 
 function MyVerifiedID_signup_shortcode(){
 
-   MyVerifiedID_register_button(true);
+   
+     extract( shortcode_atts( array(), $atts ));
+
+     return MyVerifiedID_register_button(true);
 }
 
 
@@ -54,7 +58,7 @@ function MyVerifiedID_register_button(){
       if($mviConfiguration['mvi_signup_button']=="")
           $mviConfiguration['mvi_signup_button'] = "a";
 
-      echo "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$mviConfiguration['mvi_signin_url']."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signup-style-".$mviConfiguration['mvi_signup_button'].".jpg' style='max-width:100%'></a></div>";
+      return  "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$mviConfiguration['mvi_signin_url']."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signup-style-".$mviConfiguration['mvi_signup_button'].".jpg' style='max-width:100%'></a></div>";
   }
 
 
@@ -289,7 +293,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
                   $mviConfiguration['mvi_load_style'] = "a";
 
                 
-                echo "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$authUrl."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%'></a></div>";
+                return "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$authUrl."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%'></a></div>";
             }
         }
       }
@@ -419,6 +423,8 @@ function my_plugin_load_first()
 }
 
 add_action("activated_plugin", "my_plugin_load_first");
+
+
 
 //add button to registration form
 add_action('register_form','MyVerifiedID_register_form'); 
