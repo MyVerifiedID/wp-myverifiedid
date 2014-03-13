@@ -71,7 +71,7 @@ function MyVerifiedID_SignInButton(){
 
     if($mviConfiguration["mvi_display_in_login"] == "on"){
 
-      MyVerifiedID_connect_button(true);
+      echo MyVerifiedID_connect_button(true);
     }
 }
 
