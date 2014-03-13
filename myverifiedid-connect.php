@@ -28,6 +28,37 @@ add_action('login_form', 'MyVerifiedID_SignInButton');
 * @params : Null
 * Use : loads MyVerifiedID login button when login form exists
 */
+add_shortcode('mvi-signin-button',"MyVerifiedID_signin_shortcode");
+
+function MyVerifiedID_signin_shortcode(){
+
+   MyVerifiedID_connect_button(true);
+}
+add_shortcode('mvi-signup-button',"MyVerifiedID_signup_shortcode");
+
+function MyVerifiedID_signup_shortcode(){
+
+   MyVerifiedID_register_button(true);
+}
+
+
+
+function MyVerifiedID_register_button(){
+
+  global $mviConfiguration,$myverifiedid_connect;
+
+  if(!empty($mviConfiguration['mvi_signin_url'])){
+
+      if($mviConfiguration['mvi_signup_button']=="")
+          $mviConfiguration['mvi_signup_button'] = "a";
+
+      echo "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$mviConfiguration['mvi_signin_url']."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signup-style-".$mviConfiguration['mvi_signup_button'].".jpg' style='max-width:100%'></a></div>";
+  }
+
+
+
+}
+
 
 function MyVerifiedID_SignInButton(){
     global $mviConfiguration,$myverifiedid_connect;
@@ -50,7 +81,11 @@ add_action('init', 'MyVerifiedID_connect_button');
 */
 
 function MyVerifiedID_connect_button($loggedIn=false){
+
+
   global $mviConfiguration,$myverifiedid_connect;
+
+
   //Doesn`t support in ajax call
   if(!preg_match("/admin-ajax.php|wp-load.php/", basename($_SERVER['REQUEST_URI']))){
     global $UID;

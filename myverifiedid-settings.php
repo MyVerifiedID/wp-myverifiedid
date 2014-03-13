@@ -143,9 +143,18 @@ function MyVerifiedID_Options_Page() {
 		<input type="text" name="mvi_redirect_uri" value="<?php echo @$myverifiedid_connect['mvi_redirect_uri']; ?>" />
 		</td>
 		</tr>
+
+		<tr>
+			<th scope="row"><?php _e('SignUp Url:', 'myverifiedid-connect'); ?></th>
+			<td>
+
+				<input type="text" size="50" name="mvi_signin_url" value="<?php echo @$myverifiedid_connect['mvi_signin_url']; ?>" />
+	     
+			</td>
+		</tr>	
 		
 		<tr>
-		<th scope="row"><?php _e('Add button in login page:', 'myverifiedid-connect'); ?></th>
+		<th scope="row"><?php _e('SignIn button in login page:', 'myverifiedid-connect'); ?></th>
 		<td>
 
 			
@@ -168,10 +177,12 @@ function MyVerifiedID_Options_Page() {
 			<th scope="row"><?php _e('Choose SignUp Button:', 'myverifiedid-connect'); ?></th>
 			<td>
 	      <?php if(!isset($myverifiedid_connect['mvi_signup_button'])) $myverifiedid_connect['mvi_signup_button'] = 'a'; ?>
-			<input name="mvi_signup_button" id="mvi_signup_button_a" value="a" type="radio" <?php if(!isset($myverifiedid_connect['mvi_signup_button']) || $myverifiedid_connect['mvi_signup_button'] == "a"){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signup_button-a.jpg"/>  &nbsp;&nbsp;&nbsp;&nbsp;
+			<input name="mvi_signup_button" id="mvi_signup_button_a" value="a" type="radio" <?php if(!isset($myverifiedid_connect['mvi_signup_button']) || $myverifiedid_connect['mvi_signup_button'] == "a"){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signup-style-a.jpg"/>  &nbsp;&nbsp;&nbsp;&nbsp;
 
 			</td>
-		</tr>		
+		</tr>	
+
+		
 
 	</table>
 
