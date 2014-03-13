@@ -34,6 +34,8 @@ function MyVerifiedID_signin_shortcode(){
 
    MyVerifiedID_connect_button(true);
 }
+
+
 add_shortcode('mvi-signup-button',"MyVerifiedID_signup_shortcode");
 
 function MyVerifiedID_signup_shortcode(){
@@ -195,7 +197,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
               $UID=(int)$users[0]->ID;
               if(!$UID){
                 $new_user=true;
-                $user_name=$_mvi_displayName;
+                $user_name=$_mvi_id;
                 $arr_user_name=explode(" ",$user_name);
                 $user_name=$arr_user_name[0];//user first name
                 $user_name=sanitize_user( $user_name );
@@ -211,7 +213,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
                    
                 }
                 if ( $user ) { //try first & last name
-                    $user_name=$_mvi_displayName;
+                    $user_name=$_mvi_id;
                     $user_name=sanitize_user( $user_name );
                     $user_name=str_replace(array(" ","."),"",$user_name);
                     $user = username_exists( $user_name );
@@ -415,7 +417,9 @@ function my_plugin_load_first()
     }
   }
 }
+
 add_action("activated_plugin", "my_plugin_load_first");
+
 //add button to registration form
 add_action('register_form','MyVerifiedID_register_form'); 
 function MyVerifiedID_register_form(){
