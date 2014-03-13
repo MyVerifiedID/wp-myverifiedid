@@ -243,7 +243,8 @@ function MyVerifiedID_connect_button($loggedIn=false){
             $authUrl = $MVIClient->getClientUrl();
             if($mviConfiguration['mvi_client_id'] && $mviConfiguration['mvi_client_secret'] && $mviConfiguration['mvi_redirect_uri']){
                 add_query_arg( 'mvi_connect_login', $authUrl );
-
+                if ($mviConfiguration['mvi_load_style'] == "")
+                  $mviConfiguration['mvi_load_style'] = "a";
                 echo "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$authUrl."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%'></a></div>";
             }
         }
