@@ -4,7 +4,7 @@ Settings Page
 */
 
 $mvi_status = "normal";
-
+echo '<link rel="stylesheet" href="'.WP_PLUGIN_URL . '/wp-myverifiedid-connect/css/style.css" type="text/css" media="all" />';    
 if(isset($_POST['myverifiedid_update_options'])) {
 	if($_POST['myverifiedid_update_options'] == 'Y') {
     foreach($_POST AS $k => $v){
@@ -143,17 +143,35 @@ function MyVerifiedID_Options_Page() {
 		<input type="text" name="mvi_redirect_uri" value="<?php echo @$myverifiedid_connect['mvi_redirect_uri']; ?>" />
 		</td>
 		</tr>
+		
+		<tr>
+		<th scope="row"><?php _e('Add button in login page:', 'myverifiedid-connect'); ?></th>
+		<td>
+
+			
+			<input type="checkbox" name="mvi_display_in_login" id="mvi_display_in_login" <?php if(isset($myverifiedid_connect['mvi_display_in_login']) && $myverifiedid_connect['mvi_display_in_login'] == 'on'){?> checked <?php } ?> />
+		</td>
+		</tr>
+
 
 		
 		<tr>
-		<th scope="row"><?php _e('Choose button stylesheet:', 'myverifiedid-connect'); ?></th>
-		<td>
-      <?php if(!isset($myverifiedid_connect['mvi_load_style'])) $myverifiedid_connect['mvi_load_style'] = 'a'; ?>
-		<input name="mvi_load_style" id="mvi_load_style_yes" value="a" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style']){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signIn-style-a.jpg"/>  &nbsp;&nbsp;&nbsp;&nbsp;
+			<th scope="row"><?php _e('Choose SignIn Button:', 'myverifiedid-connect'); ?></th>
+			<td>
+	      <?php if(!isset($myverifiedid_connect['mvi_load_style'])) $myverifiedid_connect['mvi_load_style'] = 'a'; ?>
+			<input name="mvi_load_style" id="mvi_load_style_yes" value="a" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style']){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signIn-style-a.jpg"/>  &nbsp;&nbsp;&nbsp;&nbsp;
 
-    <input name="mvi_load_style" id="mvi_load_style_no" value="b" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style'] == 'b'){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signIn-style-b.jpg"/>		
-		</td>
+	    	<input name="mvi_load_style" id="mvi_load_style_no" value="b" type="radio" <?php if(isset($myverifiedid_connect['mvi_load_style']) && $myverifiedid_connect['mvi_load_style'] == 'b'){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signIn-style-b.jpg"/>		
+			</td>
 		</tr>
+		<tr>
+			<th scope="row"><?php _e('Choose SignUp Button:', 'myverifiedid-connect'); ?></th>
+			<td>
+	      <?php if(!isset($myverifiedid_connect['mvi_signup_button'])) $myverifiedid_connect['mvi_signup_button'] = 'a'; ?>
+			<input name="mvi_signup_button" id="mvi_signup_button_a" value="a" type="radio" <?php if(!isset($myverifiedid_connect['mvi_signup_button']) || $myverifiedid_connect['mvi_signup_button'] == "a"){?> checked <?php } ?>> <img src="<?php echo WP_PLUGIN_URL?>/wp-myverifiedid-connect/images/signup_button-a.jpg"/>  &nbsp;&nbsp;&nbsp;&nbsp;
+
+			</td>
+		</tr>		
 
 	</table>
 

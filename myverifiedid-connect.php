@@ -30,7 +30,12 @@ add_action('login_form', 'MyVerifiedID_SignInButton');
 */
 
 function MyVerifiedID_SignInButton(){
-    MyVerifiedID_connect_button(true);
+    global $mviConfiguration,$myverifiedid_connect;
+
+    if($mviConfiguration["mvi_display_in_login"] == "on"){
+
+      MyVerifiedID_connect_button(true);
+    }
 }
 
 /*Add action to load MyVerifiedID_connect_button function when the application loads */ 
@@ -245,6 +250,8 @@ function MyVerifiedID_connect_button($loggedIn=false){
                 add_query_arg( 'mvi_connect_login', $authUrl );
                 if ($mviConfiguration['mvi_load_style'] == "")
                   $mviConfiguration['mvi_load_style'] = "a";
+
+                
                 echo "<div class='mvi-login' style='padding:5px 0;'><a class='login' href='".$authUrl."'><img src='".WP_PLUGIN_URL."/wp-myverifiedid-connect/images/signIn-style-".$mviConfiguration['mvi_load_style'].".jpg' style='max-width:100%'></a></div>";
             }
         }
