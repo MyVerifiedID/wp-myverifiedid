@@ -124,14 +124,14 @@ function MyVerifiedID_Options_Page() {
 		<tr>
 		<th scope="row"><?php _e('MyVerifiedID Client ID:', 'myverifiedid-connect'); ?></th>
 		<td>
-		<input type="text" name="mvi_client_id" value="<?php echo @$myverifiedid_connect['mvi_client_id']; ?>" />
+		<input type="text" size="50" name="mvi_client_id" value="<?php echo @$myverifiedid_connect['mvi_client_id']; ?>" />
 		</td>
 		</tr>  
       
 		<tr>
 		<th scope="row"><?php _e('MyVerifiedID Client Secret:', 'myverifiedid-connect'); ?></th>
 		<td>
-		<input type="text" name="mvi_client_secret" value="<?php echo @$myverifiedid_connect['mvi_client_secret']; ?>" />
+		<input type="text" size="50" name="mvi_client_secret" value="<?php echo @$myverifiedid_connect['mvi_client_secret']; ?>" />
 		</td>
 		</tr>
 
@@ -140,7 +140,7 @@ function MyVerifiedID_Options_Page() {
 		<tr>
 			<th scope="row"><?php _e('Redirect url:', 'myverifiedid-connect'); ?></th>
 			<td>
-			<input type="text" name="mvi_redirect_uri" value="<?php echo @$myverifiedid_connect['mvi_redirect_uri']; ?>" />
+			<input type="text" size="50" name="mvi_redirect_uri" value="<?php echo @$myverifiedid_connect['mvi_redirect_uri']; ?>" />
 			</td>
 		</tr>
 
@@ -148,7 +148,7 @@ function MyVerifiedID_Options_Page() {
 		<tr>
 			<th scope="row"><?php _e('Page with Data URL:', 'myverifiedid-connect'); ?></th>
 			<td>
-			<input type="text" name="mvi_page_uri" value="<?php echo @$myverifiedid_connect['mvi_page_uri']; ?>" />
+			<input type="text" size="50" name="mvi_page_uri" value="<?php echo @$myverifiedid_connect['mvi_page_uri']; ?>" />
 			</td>
 		</tr>
 
