@@ -138,10 +138,18 @@ function MyVerifiedID_Options_Page() {
 
 
 		<tr>
-		<th scope="row"><?php _e('Redirect url:', 'myverifiedid-connect'); ?></th>
-		<td>
-		<input type="text" name="mvi_redirect_uri" value="<?php echo @$myverifiedid_connect['mvi_redirect_uri']; ?>" />
-		</td>
+			<th scope="row"><?php _e('Redirect url:', 'myverifiedid-connect'); ?></th>
+			<td>
+			<input type="text" name="mvi_redirect_uri" value="<?php echo @$myverifiedid_connect['mvi_redirect_uri']; ?>" />
+			</td>
+		</tr>
+
+
+		<tr>
+			<th scope="row"><?php _e('Page with Data URL:', 'myverifiedid-connect'); ?></th>
+			<td>
+			<input type="text" name="mvi_page_uri" value="<?php echo @$myverifiedid_connect['mvi_page_uri']; ?>" />
+			</td>
 		</tr>
 
 		<tr>

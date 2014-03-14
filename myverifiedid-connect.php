@@ -268,7 +268,17 @@ function MyVerifiedID_connect_button($loggedIn=false){
           
            
             wp_update_user( array ( 'ID' => $UID, 'user_nicename' => $MVIUser['first_name']." ".$MVIUser['last_name'],'display_name'=> $MVIUser['first_name']." ".$MVIUser['last_name']) ) ;
-            wp_redirect( site_url() );
+            
+            if($mviConfiguration['mvi_page_uri'] != ""){
+
+              wp_redirect($mviConfiguration['mvi_page_uri']);
+
+            }else{
+
+              wp_redirect( site_url());
+
+            }
+
             exit();
           }
         }
