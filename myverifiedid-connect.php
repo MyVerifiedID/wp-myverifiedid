@@ -11,7 +11,8 @@ Author: MyVerifiedID
 License: GPL
 */
 require_once "includes/config.php";
-
+// error_reporting(E_ALL);
+// ini_set("display_errors",0);
 //Get options from wordpress settings
   $myverifiedid_connect = maybe_unserialize(get_option('myverifiedid_connect'));
 if(!empty($myverifiedid_connect)){
@@ -89,8 +90,8 @@ add_action('init', 'MyVerifiedID_connect_button');
 function MyVerifiedID_connect_button($loggedIn=false){
 
 
-  global $mviConfiguration,$myverifiedid_connect;
-
+  global $mviConfiguration,$myverifiedid_connect,$wpdb;
+    
 
   //Doesn`t support in ajax call
   if(!preg_match("/admin-ajax.php|wp-load.php/", basename($_SERVER['REQUEST_URI']))){
@@ -208,6 +209,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
                 $user_name=str_replace(array(" ","."),"",$user_name);
                 $user = username_exists( $user_name );
 
+
      
                 if ( $user ) { //try last name
                     $user_name=$arr_user_name[1];
@@ -233,6 +235,12 @@ function MyVerifiedID_connect_button($loggedIn=false){
                       $random_password = wp_generate_password( 12, false );
                       $UID = wp_create_user( $user_name, $random_password, $_mvi_email );
                       wp_update_user( array ( 'ID' => $UID, 'user_nicename' =>  $MVIUser['first_name']." ".$MVIUser['last_name'] ) ) ;
+                      
+
+                      if ( is_plugin_active( "groups/groups.php" ) ) { 
+                        $group_id = $wpdb->get_row("SELECT group_id FROM ".$wpdb->prefix."groups_group where name='MVI'" ); 
+                        $wpdb->insert( $wpdb->prefix."groups_user_group", array( 'user_id' => $UID, 'group_id' => $group_id->group_id ));
+                      }  
 
                       if(!is_int($UID)){
                           $user=get_user_by_email($_mvi_email);
@@ -278,7 +286,6 @@ function MyVerifiedID_connect_button($loggedIn=false){
               wp_redirect( site_url());
 
             }
-
             exit();
           }
         }
@@ -318,14 +325,14 @@ function MyVerifiedID_connect_button($loggedIn=false){
     
 
     if (is_user_logged_in()) :
-      global $current_user;
+      global $current_user,$mviConfiguration;
       $current_user = wp_get_current_user();
        $mvi_connect_token = get_user_meta($current_user->id, "mvi_connect_token", true ); 
       if(!empty($mvi_connect_token)){
         $access_token = json_decode($mvi_connect_token);
         if($access_token->access_token){
           
-          $_mvi_profile_picture = file_get_contents('http://api.myverifiedid.com/api/users/profile_picture?access_token='.$access_token->access_token);   
+          $_mvi_profile_picture = file_get_contents($mviConfiguration['basePath'].'/api/users/profile_picture?access_token='.$access_token->access_token);   
         
           update_user_meta($current_user->id, 'mvi_profile_picture', $_mvi_profile_picture);
         
@@ -368,7 +375,7 @@ function MyVerifiedID_login_form(){
 add_filter('get_avatar', 'MyVerifiedID_insert_avatar', 5, 5);
 
 function MyVerifiedID_insert_avatar($avatar = '', $id_or_email, $size = 96, $default = '', $alt = false) {
-
+  global $mviConfiguration;
   $id = 0;
   if (is_numeric($id_or_email)) {
     $id = $id_or_email;
@@ -386,7 +393,7 @@ function MyVerifiedID_insert_avatar($avatar = '', $id_or_email, $size = 96, $def
       $access_token = json_decode($mvi_connect_token);
     if($access_token->access_token){
       
-      $_mvi_profile_picture = @file_get_contents('http://api.myverifiedid.com/api/users/profile_picture?access_token='.$access_token->access_token);   
+      $_mvi_profile_picture = @file_get_contents($mviConfiguration['basePath'].'/api/users/profile_picture?access_token='.$access_token->access_token);   
     
     }  
   }
