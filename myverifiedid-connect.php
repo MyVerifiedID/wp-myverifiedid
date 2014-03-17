@@ -319,7 +319,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
 }
 
 
-  function cp_login_head() {
+  function login_head() {
     
     
     
