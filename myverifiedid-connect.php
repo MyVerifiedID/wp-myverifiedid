@@ -236,10 +236,11 @@ function MyVerifiedID_connect_button($loggedIn=false){
                       $UID = wp_create_user( $user_name, $random_password, $_mvi_email );
                       wp_update_user( array ( 'ID' => $UID, 'user_nicename' =>  $MVIUser['first_name']." ".$MVIUser['last_name'] ) ) ;
                       
-
-                      if ( is_plugin_active( "groups/groups.php" ) ) { 
+                      if (function_exists('is_plugin_active')) {
+                        if ( is_plugin_active( "groups/groups.php" ) ) { 
                         $group_id = $wpdb->get_row("SELECT group_id FROM ".$wpdb->prefix."groups_group where name='MVI'" ); 
                         $wpdb->insert( $wpdb->prefix."groups_user_group", array( 'user_id' => $UID, 'group_id' => $group_id->group_id ));
+                        }  
                       }  
 
                       if(!is_int($UID)){
@@ -319,7 +320,7 @@ function MyVerifiedID_connect_button($loggedIn=false){
 }
 
 
-  function login_head() {
+  function cp_login_head() {
     
     
     
