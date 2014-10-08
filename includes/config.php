@@ -2,7 +2,7 @@
 
 global $mviConfiguration;
 
- $mvi_api_root_url = "http://myverifiedid-api.com";   
+ $mvi_api_root_url = "https://api.myverifiedid.com/";   
  $mviConfiguration = array(
 
     'mvi_client_id' => "MVI-CLIENT-ID",
