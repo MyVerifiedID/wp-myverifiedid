@@ -1,4 +1,4 @@
-myverifiedid-wpconnect
+MyVerifiedID Connect
 ======================
 
    This plugin provides login with MYVERIFIEDID.
@@ -33,7 +33,8 @@ Step2:
 3. Redirect url should be http://yourdomainname/wp-login.php
 4. Page with Data URL(optional), If you want to redirect to another page rather than home page, please add url to this.
 5. SignUp Url(optional), Add registration form URL
-6. Click Save Changes, to save the settings
+6. SignIn button in login page, tick to display login button on your login screen
+7. Click Save Changes, to save the settings
 
 
 
